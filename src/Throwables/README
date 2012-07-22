@@ -1,0 +1,2 @@
+This directory contains some support classes, declaring different
+kinds of exceptions that can be thrown by the compiler.

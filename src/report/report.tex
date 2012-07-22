@@ -1,0 +1,90 @@
+\documentclass[letterpaper]{article}
+\usepackage{fullpage}
+
+\title{CSE 401 Final Report}
+\author{David Kimura \and David Koenig}
+
+\begin{document}
+
+\maketitle
+
+\section{What works}
+
+The scanner and parser should work without any problems. Type information
+is extracted from the tree. The type checker mostly works but breaks on some
+of our test cases; it is thus not called when the \texttt{MiniJava} class is
+run.
+
+All language features are implemented. Code generation is functional, and
+all test programs work. The generated assembly is somewhat unwieldy in
+places but should function.
+
+We took liberties with Java in places where we were allowed to do so. We
+made no effort to ensure that a method's invocant is evaluated before its
+parameters. We did not bother to check whether an array assignment should
+evaluate the index before the new value or vice versa. Arguments to methods
+are evaluated right to left.
+
+Although MiniJava specifies that C-style comments should nest, we follow the
+behavior of Java and stop processing comments after the first \texttt{*/}.
+
+\section{What does not work}
+
+The type verifier still has some problems. In the \texttt{MiniJava} we have
+disabled it for the time being. Generally, valid programs will compile, and
+invalid programs will cause the compiler to throw all manner of exceptions,
+usually complaining about null pointers.
+
+\section{Test programs tried}
+
+All eight provided test examples compile and run as expected; their output
+has been verified to be the same as what Oracle's Java produces. These cover
+functionality both simple (arithmetic, printing, et cetera) and advanced
+(arrays and vtables). These live in the
+\texttt{SamplePrograms/SampleMiniJavaPrograms} directory of our source tree.
+
+\section{Additional features}
+
+We initially had planned to add support for floating point arithmetic, but
+this never came to fruition. The visitor classes have support, however, so
+here is what we would do to get it working:
+
+\begin{itemize}
+
+\item Add support to the scanner. We would likely want to add new builtins
+to perform rounding and calculating the floor or ceiling of a floating point
+number.
+
+\item Add support to the parser. We would probably create a new nonterminal
+`number' which would derive either an integer or a floating point number.
+
+\item Modify the type checker to allow floating point numbers as operands to
+arithmetic operators. We would also need to modify the tree to handle
+promoting an integer to a floating point as required.
+
+\item Add support for generation of operations. We would probably target the
+SSE instruction families instead of x87 for simplicity.
+
+\end{itemize}
+
+\section{Division of work}
+
+The scraper was done mostly by Koenig (although he intended to have Kimura
+work on it, he got into the zone and accidentally finished it in one
+sitting). Refinement and occasional fixes were contributed by Kimura.
+
+The parser was split about halfway between Koenig and Kimura.
+
+Koenig completed the pass that pulls type information from the AST, with
+minor refinements from Kimura.
+
+Kimura completed the pass that actually checked the type information, with
+minor refinements from Kimura. This was not entirely functional at time of
+turn in, so it has been disabled, but it should mostly work.
+
+Kimura worked on the vtable implementation in the code generator, as well as
+various random pieces of it. Koenig worked on the implementation of variable
+scope, as well as the rest of the various random pieces.
+
+\end{document}
+

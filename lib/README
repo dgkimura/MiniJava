@@ -1,0 +1,3 @@
+This subdirectory contains the CUP (version 0.11a) and jflex
+(version 1.4.3) tools used to process the scanner and parser
+specifications.  (There's no need to look inside here.)

@@ -1,0 +1,3 @@
+These visitor classes are the method used by the sample code on
+the MiniJava website to traverse the AST.  There may be more elegant
+ways to work with your code.

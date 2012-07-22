@@ -1,0 +1,89 @@
+This is* the implementation of MiniJava for CSE 401. Authors are David
+Kimura (kimura21@cs) and David Koenig (koenig@cs).
+
+All requested checks exist. In addition, floating point support exists,
+and integers could conceivably be coerced into floats as required. (However,
+there is no parser or tokeniser support for floats at this time.)
+
+We found one parser bug, namely that the ! operator was applied with tigher
+precedence than the . operator. This was fixed in this revision.
+
+Running on a valid program, SamplePrograms/PainTest.java, produces no output.
+Running on an invalid program, SamplePrograms/SemanticallyInvalid.java,
+produces this output:
+    test-semantics:
+         [java] [PLUS ERROR]: line 86: ARG1 NOT NUMBER
+         [java] [ASSIGN ERROR]: 	line 86: retval expecs BOOLEAN found INT
+         [java] [IDENTIFIER_EXP ERROR]: 	line 51: ijofsdiijsofd not found! in KeySet={}
+         [java] [LOOKUP ERROR]: 	line 18: couldn't find GetMeepin scope containing[GetAge, Age, Init, Equal, Married, Salary, GetMarried, Compare, GetSalary]
+         [java] [METHOD ERROR]: Invalid return type!
+         [java]     Got BOOLEAN
+         [java]  Wanted INT
+         [java] [METHOD ERROR]: Invalid return type!
+         [java]     Got BOOLEAN
+         [java]  Wanted CLASS
+         [java] [METHOD ERROR]: Invalid return type!
+         [java]     Got BOOLEAN
+         [java]  Wanted INT
+         [java] Java Result: 1
+
+Here is the symbol table from Factorial.java:
+
+     [java] Fac
+     [java]     ComputeFac: METHOD
+     [java]         Parameters:
+     [java]             num: INT
+     [java]         Local Variables:
+     [java]             num_aux: INT
+
+And from SamplePrograms/PainTest.java:
+
+     [java] Dard
+     [java]     Kooft: METHOD
+     [java]         Parameters:
+     [java]         Local Variables:
+     [java] A
+     [java] Zahr extends Element
+     [java]     Init: METHOD
+     [java]         Parameters:
+     [java]             v_Age: INT
+     [java]             v_Salary: INT
+     [java]             v_Married: BOOLEAN
+     [java]         Local Variables:
+     [java] Element
+     [java]     GetAge: METHOD
+     [java]         Parameters:
+     [java]         Local Variables:
+     [java]     Age: INT
+     [java]     Init: METHOD
+     [java]         Parameters:
+     [java]             v_Age: INT
+     [java]             v_Salary: INT
+     [java]             v_Married: BOOLEAN
+     [java]         Local Variables:
+     [java]     Equal: METHOD
+     [java]         Parameters:
+     [java]             other: CLASS
+     [java]         Local Variables:
+     [java]             nt: INT
+     [java]             aux02: INT
+     [java]             aux01: INT
+     [java]             ret_val: BOOLEAN
+     [java]     Married: BOOLEAN
+     [java]     Salary: INT
+     [java]     GetMarried: METHOD
+     [java]         Parameters:
+     [java]         Local Variables:
+     [java]     Compare: METHOD
+     [java]         Parameters:
+     [java]             num1: INT
+     [java]             num2: INT
+     [java]         Local Variables:
+     [java]             retval: BOOLEAN
+     [java]             aux02: INT
+     [java]     GetSalary: METHOD
+     [java]         Parameters:
+     [java]         Local Variables:
+
+BUILD SUCCESSFUL
+Total time: 1 second

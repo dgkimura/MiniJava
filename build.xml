@@ -1,0 +1,176 @@
+<!-- ant build file for cse 401 compiler project -->
+<!-- hp, 1/10 -->
+
+<!-- This would be better if symbolic variables were used for various class
+         and path names.    Maybe next time.... -->
+
+<project name="minijava" default="compile">
+
+    <!-- if you are using eclipse, you can uncomment the following property
+             declaration to get Eclipse to use its own compiler instead of javac
+             when it runs this build file. -->
+    <!--
+    <property name="build.compiler"
+                        value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+    -->
+
+    <!-- build targets for compiler -->
+    <!-- you might not need to change much of anything here -->
+
+    <target name="init">
+        <mkdir dir="build/classes" />
+    </target>
+
+    <target name="clean">
+        <delete dir="build"/>
+        <delete file="src/Parser/parser.java"/>
+        <delete file="src/Parser/sym.java"/>
+        <delete file="src/Scanner/scanner.java"/>
+        <delete file="src/Scanner/scanner.java~"/>
+        <delete file="src/Factorial.s"/>
+    </target>
+
+    <target name="check.parse.files">
+        <uptodate targetfile="src/Parser/parser.java"
+                            srcfile="src/Parser/minijava.cup"
+                            property="parser.uptodate"/>
+        <uptodate targetfile="src/Scanner/scanner.java"
+                            srcfile="src/Scanner/minijava.jflex"
+                            property="scanner.uptodate"/>
+        <condition property="scanner.parser.uptodate">
+            <and>
+                <isset property="scanner.uptodate"/>
+                <isset property="parser.uptodate"/>
+            </and>
+        </condition>
+    </target>
+
+    <target name="gen-parser" depends="check.parse.files"
+                    unless="parser.uptodate">
+        <java jar="lib/CUP.jar" fork="true" failonerror="true">
+            <arg value="-destdir"/> <arg value="src/Parser"/>
+            <arg value="src/Parser/minijava.cup"/>
+        </java>
+    </target>
+
+    <target name="gen-scanner" depends="gen-parser, check.parse.files"
+                    unless="scanner.parser.uptodate">
+        <java classname="JFlex.Main" classpath="lib/JFlex.jar" fork="true" failonerror="true">
+            <arg value="src/Scanner/minijava.jflex"/>
+        </java>
+    </target>
+
+    <target name="compile" depends="init, gen-scanner">
+        <javac srcdir="src" destdir="build/classes" classpath="lib/CUP.jar"/>
+    </target>
+
+    <!-- targets for running test programs -->
+    <!-- you will want to expand on what's here. -->
+
+    <!-- run scanner and parser test programs on initial demo input -->
+
+    <target name="test-scanner" depends="compile">
+        <java classname="TestScanner" classpath="build/classes;lib/CUP.jar"
+            fork="true" input="SamplePrograms/Example.java" />
+        <java classname="TestScanner"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true"
+            input="SamplePrograms/TestScanner/ScannerValid.java" />
+        <java classname="TestScanner"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true"
+            input="SamplePrograms/TestScanner/ScannerInvalid.java" />
+        <java classname="TestScanner"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true"
+            input="SamplePrograms/SampleMiniJavaPrograms/Factorial.java" />
+    </target>
+
+    <target name="test-parser" depends="compile">
+        <java classname="TestParser"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true" input="SamplePrograms/PainTest.java" />
+    </target>
+
+    <target name="test-semantics" depends="compile">
+        <!--
+        <java classname="TestSemantics"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true" input="SamplePrograms/PainTest.java" />
+        <java classname="TestSemantics"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true" input="SamplePrograms/SampleMiniJavaPrograms/BubbleSort.java" />
+        <java classname="TestSemantics"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true" input="SamplePrograms/SampleMiniJavaPrograms/LinearSearch.java" />
+        <java classname="TestSemantics"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true" input="SamplePrograms/SampleMiniJavaPrograms/QuickSort.java" />
+        <java classname="TestSemantics"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true" input="SamplePrograms/SampleMiniJavaPrograms/BinarySearch.java" />
+        <java classname="TestSemantics"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true" input="SamplePrograms/SampleMiniJavaPrograms/Factorial.java" />
+        <java classname="TestSemantics"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true" input="SamplePrograms/SampleMiniJavaPrograms/LinkedList.java" />
+        -->
+        <!-- PROBLEMS -->
+        <java classname="TestSemantics"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true" input="SamplePrograms/SampleMiniJavaPrograms/TreeVisitor.java" />
+    </target>
+
+    <target name="test-compile" depends="compile">
+        <java classname="MiniJava"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true"
+            input="SamplePrograms/SampleMiniJavaPrograms/Factorial.java">
+            <arg value="src/Factorial.s" />
+        </java>
+        <java classname="MiniJava"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true"
+            input="SamplePrograms/SampleMiniJavaPrograms/BinarySearch.java">
+            <arg value="src/BinarySearch.s" />
+        </java>
+        <java classname="MiniJava"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true"
+            input="SamplePrograms/SampleMiniJavaPrograms/LinearSearch.java">
+            <arg value="src/LinearSearch.s" />
+        </java>
+        <java classname="MiniJava"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true"
+            input="SamplePrograms/SampleMiniJavaPrograms/QuickSort.java">
+            <arg value="src/QuickSort.s" />
+        </java>
+        <java classname="MiniJava"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true"
+            input="SamplePrograms/SampleMiniJavaPrograms/BubbleSort.java">
+            <arg value="src/BubbleSort.s" />
+        </java>
+        <java classname="MiniJava"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true"
+            input="SamplePrograms/SampleMiniJavaPrograms/BinaryTree.java">
+            <arg value="src/BinaryTree.s" />
+        </java>
+        <java classname="MiniJava"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true"
+            input="SamplePrograms/SampleMiniJavaPrograms/TreeVisitor.java">
+            <arg value="src/TreeVisitor.s" />
+        </java>
+        <java classname="MiniJava"
+            classpath="build/classes;lib/CUP.jar"
+            fork="true"
+            input="SamplePrograms/SampleMiniJavaPrograms/LinkedList.java">
+            <arg value="src/LinkedList.s" />
+        </java>
+
+    </target>
+</project>
